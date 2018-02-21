@@ -1,6 +1,7 @@
 <html>
 <head>
-    <script type="text/javascript" src="../dist/js/ramda.min.js"></script>
+    <script type="text/javascript" src="js/ramda.min.js"></script>
+    <script type="text/javascript" src="js/faker.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
@@ -30,8 +31,10 @@
         chartsLoaded = true;
     });
 
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * Math.floor(max));
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
 
     function drawChart(id) {
@@ -43,7 +46,7 @@
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Topping');
                 data.addColumn('number', 'Slices');
-                data.addRows(generateFakeChartData(4));
+                data.addRows(generateFakeChartData(getRandomInt(4, 9)));
                 var chart = new google.visualization.PieChart(document.getElementById(id));
                 chart.draw(data, options);
                 console.log('chart (' + id + ') loaded...');
@@ -51,9 +54,9 @@
         }, 20);
 
         function generateFakeChartData(max) {
-            return [R.map(n => {
-                return [faker.name.findName, getRandomInt()];
-            }, R.range(1, max))];
+            return R.map(n => {
+                return [faker.name.findName(), getRandomInt(5, 10)];
+            }, R.range(1, max));
         }
 
     }
