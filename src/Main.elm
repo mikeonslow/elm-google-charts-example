@@ -1,7 +1,14 @@
 module Main exposing (..)
 
 import AnimationFrame
+import Bootstrap.Button as Button
+import Bootstrap.Card as Card
+import Bootstrap.Grid as Grid
+import Bootstrap.Grid.Col as Col
+import Bootstrap.Grid.Row as Row
+import Bootstrap.Text as Text
 import Date
+import FontAwesome.Web as Icon
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -30,21 +37,37 @@ type alias Chart =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text "Analytics Dashboard\n        " ]
-        , div [ class "dashboard-container" ] (List.map viewChartContainer model.chartData)
+        [ h1 [ class "page-heading" ] [ text "Analytics Dashboard" ]
+        , Grid.container []
+            [ Grid.row []
+                (List.map viewChartContainer model.chartData)
+            ]
         ]
 
 
 viewChartContainer options =
-    div [ id options.id, class "chart-container" ]
-        [ viewChart options
-        , text options.id
-        , button [] [ text "Reload" ]
+    Grid.col [ Col.md4 ]
+        [ Card.config [ Card.align Text.alignXsCenter ]
+            |> Card.header [] [ text options.id ]
+            |> Card.block []
+                [ Card.text [] [ viewChart options ]
+                , Card.text [] [ viewButtonRefresh options ]
+                ]
+            |> Card.view
+        , br [] []
         ]
 
 
 viewChart options =
-    div [ class "chart" ] [ i [ class "fas fa-chart-pie fa-8x" ] [] ]
+    i [ class "fas fa-chart-pie fa-8x" ] []
+
+
+viewButtonRefresh options =
+    Button.button
+        [ Button.primary
+        , Button.attrs [ class "text-right" ]
+        ]
+        [ text "Reload ", i [ class "fas fa-sync-alt fa-1x" ] [] ]
 
 
 type Msg
