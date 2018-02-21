@@ -1,0 +1,68 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <style>
+        h1.page-heading {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .fa-chart-pie {
+            color: #23517f;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+    var chartsLoaded = false;
+
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(function () {
+        chartsLoaded = true;
+    });
+
+    function drawChart(id) {
+        // TODO move all of this logic into it's own module once PoC is complete
+        var options = {'height': 250, 'legend': 'right'};
+        var chartElemInterval = setInterval(function () {
+            if (chartsLoaded === true && document.getElementById(id) !== null) {
+                clearInterval(chartElemInterval);
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Topping');
+                data.addColumn('number', 'Slices');
+                data.addRows([
+                    ['Mike Johnson', 3],
+                    ['John Smith', 1],
+                    ['Olivia Sweeney', 1],
+                    ['Zak Jameston', 1],
+                    ['Harriet Truman', 2]
+                ]);
+                var chart = new google.visualization.PieChart(document.getElementById(id));
+                chart.draw(data, options);
+                console.log('chart (' + id + ') loaded...');
+            }
+        }, 20);
+        // Instantiate and draw our chart, passing in some options.
+
+    }
+</script>
+<div id="elm"></div>
+<script>
+    var app = Elm.Main.embed(document.getElementById('elm'));
+
+    app.ports.renderChart.subscribe(function (id) {
+        console.log('renderChart ' + id);
+        drawChart(id);
+        // app.ports.suggestions.send(suggestions);
+    });
+</script>
+</body>
+</html>
