@@ -48,10 +48,11 @@ view model =
 viewChartContainer options =
     Grid.col [ Col.md4 ]
         [ Card.config [ Card.align Text.alignXsCenter ]
-            |> Card.header [] [ text options.id ]
+            |> Card.header [] [ text <| String.toLower options.id ]
             |> Card.block []
                 [ Card.text [ id options.id ] [ viewChart options ]
-                , Card.text [] [ viewButtonRefresh options ]
+
+                --                , Card.text [] [ viewButtonRefresh options ]
                 ]
             |> Card.view
         , br [] []
@@ -59,7 +60,7 @@ viewChartContainer options =
 
 
 viewChart options =
-    i [ class "fas fa-chart-pie fa-8x" ] []
+    i [ class "fas fa-spinner fa-spin" ] []
 
 
 viewButtonRefresh options =
