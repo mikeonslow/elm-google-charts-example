@@ -5,8 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm build && elm package install --yes && elm-live src/Main.elm --output=dist/js/app.js --dir=dist --pushstate --open --debug",
-    "build": "cp -r src/{*.html,js} dist"
+    "start": "npm run build && elm package install --yes && elm-live src/Main.elm --output=dist/js/app.js --dir=dist --pushstate --open --debug",
+    "build": "mkdir -p dist && cp -r src/{*.html,js} dist",
+    "watch": "npm-scripts-watcher"
+  },
+  "watch": {
+    "src/{*.html,*.js}": [
+      "build"
+    ]
   },
   "repository": {
     "type": "git",
@@ -21,5 +27,9 @@
   "dependencies": {
     "faker": "^4.1.0",
     "ramda": "^0.25.0"
+  },
+  "devDependencies": {
+    "google-closure-compiler-js": "^20180204.0.0",
+    "npm-scripts-watcher": "^1.0.2"
   }
 }

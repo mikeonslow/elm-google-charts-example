@@ -6,6 +6,7 @@ import Bootstrap.Card as Card
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
+import Bootstrap.Navbar as Navbar
 import Bootstrap.Text as Text
 import Date
 import FontAwesome.Web as Icon
@@ -17,17 +18,31 @@ import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 import Time
 
 
-initialModel : Model
-initialModel =
+initialState : ( Model, Cmd Msg )
+initialState =
     let
+        ( navbarState, navbarCmd ) =
+            Navbar.initialState NavbarMsg
+
         charts =
-            List.range 1 22 |> List.map (\i -> stubChart i)
+            List.range 1 21 |> List.map (\i -> stubChart i)
+
+        chartCmds =
+            charts |> List.reverse |> List.map (\c -> renderChart c.id)
+
+        model =
+            { navbarState = navbarState
+            , chartData = charts
+            , currentTick = 0
+            }
     in
-    { chartData = charts, currentTick = 0 }
+    ( model
+    , Cmd.batch (navbarCmd :: chartCmds)
+    )
 
 
 type alias Model =
-    { chartData : List Chart, currentTick : Float }
+    { navbarState : Navbar.State, chartData : List Chart, currentTick : Float }
 
 
 type alias Chart =
@@ -37,9 +52,17 @@ type alias Chart =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [ class "page-heading" ] [ text "Analytics Dashboard" ]
+        [ Navbar.config NavbarMsg
+            |> Navbar.withAnimation
+            |> Navbar.brand [ href "#" ] [ i [ class "fas fa-chart-bar" ] [], text " Elm + Google Charts Test" ]
+            |> Navbar.info
+            |> Navbar.items
+                []
+            |> Navbar.view model.navbarState
+        , br [] []
         , Grid.containerFluid []
-            [ Grid.row []
+            [ Grid.row [] []
+            , Grid.row []
                 (List.map viewChartContainer model.chartData)
             ]
         ]
@@ -47,7 +70,7 @@ view model =
 
 viewChartContainer options =
     Grid.col [ Col.md4 ]
-        [ Card.config [ Card.outlineWarning, Card.align Text.alignXsCenter ]
+        [ Card.config [ Card.outlinePrimary, Card.align Text.alignXsCenter ]
             |> Card.header [] [ text <| String.toLower options.id ]
             |> Card.block []
                 [ Card.text [ id options.id ] [ viewChart options ]
@@ -72,13 +95,17 @@ viewButtonRefresh options =
 
 
 type Msg
-    = CurrentTick Time.Time
+    = NavbarMsg Navbar.State
+    | CurrentTick Time.Time
     | None
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NavbarMsg state ->
+            ( { model | navbarState = state }, Cmd.none )
+
         CurrentTick time ->
             --            let
             ----                x =
@@ -99,8 +126,9 @@ update msg model =
     (,)
 
 
-subscriptions =
-    \_ -> Sub.none
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Navbar.subscriptions model.navbarState NavbarMsg
 
 
 
@@ -132,7 +160,7 @@ main =
 init : ( Model, Cmd Msg )
 init =
     let
-        cmds =
-            initialModel.chartData |> List.map (\c -> renderChart c.id) |> Cmd.batch
+        ( initialModel, initialCmds ) =
+            initialState
     in
-    ( initialModel, cmds )
+    ( initialModel, initialCmds )
