@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import AnimationFrame
 import Bootstrap.Button as Button
@@ -50,7 +50,7 @@ viewChartContainer options =
         [ Card.config [ Card.align Text.alignXsCenter ]
             |> Card.header [] [ text options.id ]
             |> Card.block []
-                [ Card.text [] [ viewChart options ]
+                [ Card.text [ id options.id ] [ viewChart options ]
                 , Card.text [] [ viewButtonRefresh options ]
                 ]
             |> Card.view
@@ -79,10 +79,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         CurrentTick time ->
-            let
-                x =
-                    Debug.log "CurrentTick" <| Date.fromTime time
-            in
+            --            let
+            ----                x =
+            ----                    Debug.log "CurrentTick" <| Date.fromTime time
+            --            in
             { model | currentTick = time } ! []
 
         None ->
@@ -99,15 +99,23 @@ update msg model =
 
 
 subscriptions =
-    \_ -> AnimationFrame.times CurrentTick
+    \_ -> Sub.none
 
 
 
---HELPERS
+--AnimationFrame.times CurrentTick
+-- PORTS
+
+
+port renderChart : String -> Cmd msg
+
+
+
+-- HELPERS
 
 
 stubChart index =
-    Chart ("chart " ++ toString index) []
+    Chart ("chart_" ++ toString index) []
 
 
 main : Program Never Model Msg
@@ -122,4 +130,8 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, Cmd.none )
+    let
+        cmds =
+            initialModel.chartData |> List.map (\c -> renderChart c.id) |> Cmd.batch
+    in
+    ( initialModel, cmds )
