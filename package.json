@@ -1,0 +1,20 @@
+{
+  "name": "elm-google-charts-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "elm package install --yes && elm-live src/Main.elm --output=dist/js/app.js --dir=dist --pushstate --open --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeonslow/elm-google-charts-test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikeonslow/elm-google-charts-test/issues"
+  },
+  "homepage": "https://github.com/mikeonslow/elm-google-charts-test#readme"
+}
