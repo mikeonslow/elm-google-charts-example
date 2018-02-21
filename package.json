@@ -25,11 +25,11 @@
   },
   "homepage": "https://github.com/mikeonslow/elm-google-charts-test#readme",
   "dependencies": {
-    "faker": "^4.1.0",
-    "ramda": "^0.25.0"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "google-closure-compiler-js": "^20180204.0.0",
-    "npm-scripts-watcher": "^1.0.2"
+    "npm-scripts-watcher": "^1.0.2",
+    "ramda": "^0.25.0"
   }
 }
