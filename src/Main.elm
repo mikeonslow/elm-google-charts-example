@@ -38,7 +38,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 [ class "page-heading" ] [ text "Analytics Dashboard" ]
-        , Grid.container []
+        , Grid.containerFluid []
             [ Grid.row []
                 (List.map viewChartContainer model.chartData)
             ]
@@ -47,7 +47,7 @@ view model =
 
 viewChartContainer options =
     Grid.col [ Col.md4 ]
-        [ Card.config [ Card.align Text.alignXsCenter ]
+        [ Card.config [ Card.outlineWarning, Card.align Text.alignXsCenter ]
             |> Card.header [] [ text <| String.toLower options.id ]
             |> Card.block []
                 [ Card.text [ id options.id ] [ viewChart options ]
@@ -60,7 +60,7 @@ viewChartContainer options =
 
 
 viewChart options =
-    div [ class "chart-placeholder" ] [ i [ class "fas fa-spinner fa-spin fa-3x" ] [] ]
+    div [ class "chart-placeholder text-primary" ] [ i [ class "fas fa-spinner fa-spin fa-3x" ] [] ]
 
 
 viewButtonRefresh options =
