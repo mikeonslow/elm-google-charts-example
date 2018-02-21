@@ -60,7 +60,7 @@ viewChartContainer options =
 
 
 viewChart options =
-    i [ class "fas fa-spinner fa-spin" ] []
+    div [ class "chart-placeholder" ] [ i [ class "fas fa-spinner fa-spin fa-3x" ] [] ]
 
 
 viewButtonRefresh options =
