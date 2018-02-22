@@ -54,7 +54,7 @@ view model =
     div []
         [ Navbar.config NavbarMsg
             |> Navbar.withAnimation
-            |> Navbar.brand [ href "#" ] [ i [ class "fas fa-chart-bar" ] [], text " Elm + Google Charts Test" ]
+            |> Navbar.brand [ href "#" ] [ i [ class "fas fa-chart-bar" ] [], text " Elm + Google Charts" ]
             |> Navbar.info
             |> Navbar.items
                 []

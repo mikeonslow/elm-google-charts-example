@@ -1,0 +1,60 @@
+{
+  "_args": [
+    [
+      "mdbootstrap@4.4.4",
+      "/Users/grantmaki/clarity/quote"
+    ]
+  ],
+  "_from": "mdbootstrap@4.4.4",
+  "_id": "mdbootstrap@4.4.4",
+  "_inBundle": false,
+  "_integrity": "sha512-vmKEYW6r0P+zQrC3ovKjS9zImPs7jhZcPUNJ56Vwu4YqVrq8UwSGzDOTNejn7ZsyN7rs4DxFWr/OCzbexW4Cfg==",
+  "_location": "/mdbootstrap",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "mdbootstrap@4.4.4",
+    "name": "mdbootstrap",
+    "escapedName": "mdbootstrap",
+    "rawSpec": "4.4.4",
+    "saveSpec": null,
+    "fetchSpec": "4.4.4"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/mdbootstrap/-/mdbootstrap-4.4.4.tgz",
+  "_spec": "4.4.4",
+  "_where": "/Users/grantmaki/clarity/quote",
+  "author": {
+    "name": "MDBootstrap"
+  },
+  "bugs": {
+    "url": "https://github.com/mdbootstrap/bootstrap-material-design/issues"
+  },
+  "description": "Material Design for Bootstrap (MDB) is a powerful Material Design UI KIT for most popular HTML, CSS, and JS framework - Bootstrap.",
+  "homepage": "https://mdbootstrap.com",
+  "keywords": [
+    "material",
+    "design",
+    "bootstrap",
+    "mdbootstrap",
+    "mdb",
+    "framework",
+    "css",
+    "mobile-first",
+    "responsive"
+  ],
+  "license": "Custom license (read license.pdf)",
+  "main": "js/mdb.min.js",
+  "name": "mdbootstrap",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mdbootstrap/bootstrap-material-design.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "4.4.4"
+}
