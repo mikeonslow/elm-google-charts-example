@@ -16,7 +16,11 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
+import Rest.Api as Api
 import Time
+
+
+-- MODEL
 
 
 initialState : ( Model, Cmd Msg )
@@ -39,7 +43,7 @@ initialState =
             }
     in
     ( model
-    , Cmd.batch (navbarCmd :: chartCmds)
+    , Cmd.batch [ navbarCmd ]
     )
 
 
@@ -49,6 +53,37 @@ type alias Model =
 
 type alias Chart =
     { id : String, data : List Int }
+
+
+
+-- UPDATE
+
+
+type Msg
+    = NavbarMsg Navbar.State
+    | CurrentTick Time.Time
+    | None
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NavbarMsg state ->
+            ( { model | navbarState = state }, Cmd.none )
+
+        CurrentTick time ->
+            --            let
+            ----                x =
+            ----                    Debug.log "CurrentTick" <| Date.fromTime time
+            --            in
+            { model | currentTick = time } ! []
+
+        None ->
+            ( model, Cmd.none )
+
+
+
+-- VIEW
 
 
 view : Model -> Html Msg
@@ -63,8 +98,7 @@ view model =
             |> Navbar.view model.navbarState
         , br [] []
         , Grid.containerFluid []
-            [ Grid.row [] []
-            , Grid.row []
+            [ Grid.row []
                 (List.map viewChartContainer model.chartData)
             ]
         ]
@@ -96,36 +130,8 @@ viewButtonRefresh options =
         [ text "Reload ", i [ class "fas fa-sync-alt fa-1x" ] [] ]
 
 
-type Msg
-    = NavbarMsg Navbar.State
-    | CurrentTick Time.Time
-    | None
 
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        NavbarMsg state ->
-            ( { model | navbarState = state }, Cmd.none )
-
-        CurrentTick time ->
-            --            let
-            ----                x =
-            ----                    Debug.log "CurrentTick" <| Date.fromTime time
-            --            in
-            { model | currentTick = time } ! []
-
-        None ->
-            ( model, Cmd.none )
-
-
-
--- Helpers
-
-
-(=>) : a -> b -> ( a, b )
-(=>) =
-    (,)
+-- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
@@ -134,7 +140,6 @@ subscriptions model =
 
 
 
---AnimationFrame.times CurrentTick
 -- PORTS
 
 
@@ -143,6 +148,11 @@ port renderChart : String -> Cmd msg
 
 
 -- HELPERS
+
+
+(=>) : a -> b -> ( a, b )
+(=>) =
+    (,)
 
 
 stubChart index =
