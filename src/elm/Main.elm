@@ -8,6 +8,7 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Text as Text
+import Data.WallBoard
 import Date
 import FontAwesome.Web as Icon
 import Html exposing (..)
