@@ -1,8 +1,8 @@
 "use strict";
 
-import "../src/mdbootstrap/css/bootstrap.min.css";
+import "../src/css/mdbootstrap/css/bootstrap.min.css";
 // require("./index.html");
-import "../src/mdbootstrap/sass/mdb.scss";
+import "../src/css/mdbootstrap/sass/mdb.scss";
 
 const faker = require("faker");
 const R = require("ramda");
@@ -50,7 +50,7 @@ const R = require("ramda");
       }, R.range(1, max));
     }
 
-    var Elm = require("./../src/Main.elm");
+    var Elm = require("../src/elm/Main.elm");
     var mountNode = document.getElementById("main");
 
     var app = Elm.Main.embed(mountNode);
