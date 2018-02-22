@@ -5,12 +5,12 @@ const fs = require("fs");
 const server = jsonServer.create();
 const data = fakeData();
 
-fs.writeFileSync("db.json", JSON.stringify(data));
+fs.writeFileSync("./db.json", JSON.stringify(data));
 
 const middlewares = jsonServer.defaults();
-const router = jsonServer.router("db.json");
+const router = jsonServer.router("./db.json");
 
-fs.readFile("db.json", (err, data) => {
+fs.readFile("./db.json", (err, data) => {
   if (err) throw err;
   console.log(data.toString());
   server.use(middlewares);

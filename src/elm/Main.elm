@@ -8,7 +8,7 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Text as Text
-import Data.WallBoard
+import Data.WallBoard as WallBoard
 import Date
 import FontAwesome.Web as Icon
 import Html exposing (..)
@@ -33,6 +33,7 @@ initialState =
 
         model =
             { navbarState = navbarState
+            , wallBoard = WallBoard.initialModel
             , chartData = charts
             , currentTick = 0
             }
@@ -43,7 +44,7 @@ initialState =
 
 
 type alias Model =
-    { navbarState : Navbar.State, chartData : List Chart, currentTick : Float }
+    { navbarState : Navbar.State, wallBoard : WallBoard.Data, chartData : List Chart, currentTick : Float }
 
 
 type alias Chart =
@@ -55,7 +56,7 @@ view model =
     div []
         [ Navbar.config NavbarMsg
             |> Navbar.withAnimation
-            |> Navbar.brand [ href "#" ] [ i [ class "fas fa-chart-bar" ] [], text " Elm + Google Charts" ]
+            |> Navbar.brand [ href "#" ] [ i [ class "fas fa-chart-bar" ] [], text " Elm + Google Charts Example" ]
             |> Navbar.info
             |> Navbar.items
                 []
