@@ -1,25 +1,5 @@
 // Your custom style
 
-//navBar
-nav button {
-  display : none;
-}
-
-//form elements
-.form-group.row {
-  display: flex;
-}
-
-input.form-control{
-  height: 1.2rem;
-}
-
-label.form-control-label{
-  margin-top: 1rem;
-  margin-bottom: 0.2rem;
-}
-
-//navBar
 .navbar .navbar-brand {
   flex-grow: 1;
   color: white;
