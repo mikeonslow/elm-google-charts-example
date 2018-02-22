@@ -22,8 +22,28 @@ label.form-control-label{
 //navBar
 .navbar .navbar-brand {
   flex-grow: 1;
+  color: white;
 }
 
 .form-control select{
   height: 2.5rem;
 }
+
+h1.page-heading {
+  text-align: center;
+  padding: 25px;
+}
+
+.fa-chart-pie {
+  color: #23517f;
+}
+
+.chart-placeholder {
+  padding-top: 110px;
+  height:250px;
+}
+
+button {
+  cursor: pointer;
+}
+

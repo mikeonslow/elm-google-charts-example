@@ -1,10 +1,65 @@
 "use strict";
 
 import "../src/mdbootstrap/css/bootstrap.min.css";
-require("./index.html");
+// require("./index.html");
 import "../src/mdbootstrap/sass/mdb.scss";
 
-var Elm = require("./../src/Main.elm");
-var mountNode = document.getElementById("main");
+const faker = require("faker");
+const R = require("ramda");
 
-var app = Elm.Main.embed(mountNode);
+(function() {
+  var startup = function() {
+    var chartsLoaded = false;
+
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(function() {
+      chartsLoaded = true;
+    });
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    }
+
+    function drawChart(id) {
+      // TODO move all of this logic into it's own module once PoC is completed
+      const options = {
+        legend: "right",
+        tooltip: { trigger: "selection" }
+      };
+      var chartElemInterval = setInterval(function() {
+        if (chartsLoaded === true && document.getElementById(id) !== null) {
+          clearInterval(chartElemInterval);
+          var data = new google.visualization.DataTable();
+          data.addColumn("string", "Topping");
+          data.addColumn("number", "Slices");
+          data.addRows(generateFakeChartData(getRandomInt(4, 9)));
+          var chart = new google.visualization.PieChart(
+            document.getElementById(id)
+          );
+          chart.draw(data, options);
+          console.log("chart (" + id + ") loaded...");
+        }
+      }, 20);
+    }
+
+    function generateFakeChartData(max) {
+      return R.map(n => {
+        return [faker.name.findName(), getRandomInt(5, 10)];
+      }, R.range(1, max));
+    }
+
+    var Elm = require("./../src/Main.elm");
+    var mountNode = document.getElementById("main");
+
+    var app = Elm.Main.embed(mountNode);
+
+    app.ports.renderChart.subscribe(function(id) {
+      console.log("renderChart " + id);
+      drawChart(id);
+    });
+  };
+
+  window.addEventListener("load", startup, false);
+})();
