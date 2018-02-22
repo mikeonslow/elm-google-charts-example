@@ -21,6 +21,7 @@ import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 import Rest.Api as Api exposing (endpoint)
 import Time
+import View.Widget
 
 
 -- MODEL
@@ -32,18 +33,13 @@ initialState =
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
 
-        charts =
-            List.range 1 21 |> List.map (\i -> stubChart i)
-
-        chartCmds =
-            charts |> List.reverse |> List.map (\c -> renderChart c.id)
-
+        --        chartCmds =
+        --            charts |> List.reverse |> List.map (\c -> renderChart c.id)
         model =
             { navbarState = navbarState
             , dashboards = []
             , widgets = []
             , charts = []
-            , chartData = charts
             , currentTick = 0
             }
     in
@@ -57,7 +53,6 @@ type alias Model =
     , dashboards : List Dashboard.Data
     , widgets : List Widget.Data
     , charts : List Chart.Data
-    , chartData : List Chart
     , currentTick : Float
     }
 
@@ -160,45 +155,23 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ Navbar.config NavbarMsg
-            |> Navbar.withAnimation
-            |> Navbar.brand [ href "#" ] [ i [ class "fas fa-chart-bar" ] [], text " Elm + Google Charts Example" ]
-            |> Navbar.info
-            |> Navbar.items
-                []
-            |> Navbar.view model.navbarState
+        [ viewNavbar model
         , br [] []
         , Grid.containerFluid []
             [ Grid.row []
-                (List.map viewChartContainer model.chartData)
+                (List.map View.Widget.render model.widgets)
             ]
         ]
 
 
-viewChartContainer options =
-    Grid.col [ Col.md4 ]
-        [ Card.config [ Card.outlinePrimary, Card.align Text.alignXsCenter ]
-            |> Card.header [] [ text <| String.toLower options.id ]
-            |> Card.block []
-                [ Card.text [ id options.id ] [ viewChart options ]
-
-                --                , Card.text [] [ viewButtonRefresh options ]
-                ]
-            |> Card.view
-        , br [] []
-        ]
-
-
-viewChart options =
-    div [ class "chart-placeholder text-primary" ] [ i [ class "fas fa-spinner fa-spin fa-3x" ] [] ]
-
-
-viewButtonRefresh options =
-    Button.button
-        [ Button.primary
-        , Button.attrs [ class "text-right" ]
-        ]
-        [ text "Reload ", i [ class "fas fa-sync-alt fa-1x" ] [] ]
+viewNavbar model =
+    Navbar.config NavbarMsg
+        |> Navbar.withAnimation
+        |> Navbar.brand [ href "#" ] [ i [ class "fas fa-chart-bar" ] [], text " Elm + Google Charts Example" ]
+        |> Navbar.info
+        |> Navbar.items
+            []
+        |> Navbar.view model.navbarState
 
 
 
@@ -238,10 +211,6 @@ getWidgets =
 (=>) : a -> b -> ( a, b )
 (=>) =
     (,)
-
-
-stubChart index =
-    Chart ("chart_" ++ toString index) []
 
 
 main : Program Never Model Msg
