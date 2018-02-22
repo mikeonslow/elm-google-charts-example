@@ -1,5 +1,5 @@
-# elm-google-charts-test
-Testing Elm + Google Charts
+# elm-google-charts-example
+Elm + Google Charts Example
 
 ### To start
 `npm install && npm start`
