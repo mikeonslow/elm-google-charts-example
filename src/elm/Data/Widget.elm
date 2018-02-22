@@ -7,17 +7,19 @@ import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 
 type alias Data =
     { id : Float
-    , name : String
-    , chart : Chart.Data
+    , dashboardId : Float
+    , label : String
     }
 
 
-decoder : Decoder Data
+decoder : Decoder (List Data)
 decoder =
-    decode Data
-        |> required "id" Decode.float
-        |> required "name" Decode.string
-        |> required "chart" Chart.decoder
+    Decode.list
+        (decode Data
+            |> required "id" Decode.float
+            |> required "dashboardId" Decode.float
+            |> required "label" Decode.string
+        )
 
 
 endpoint =

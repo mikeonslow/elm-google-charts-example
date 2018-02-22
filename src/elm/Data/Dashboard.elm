@@ -7,14 +7,17 @@ import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 
 type alias Data =
     { id : Float
-    , name : String
-    , widgets : List Widget.Data
+    , label : String
     }
 
 
-decoder : Decoder Data
+decoder : Decoder (List Data)
 decoder =
+    Decode.list decodeDashboard
+
+
+decodeDashboard : Decoder Data
+decodeDashboard =
     decode Data
         |> required "id" Decode.float
-        |> required "name" Decode.string
-        |> required "widgets" (Decode.list Widget.decoder)
+        |> required "label" Decode.string

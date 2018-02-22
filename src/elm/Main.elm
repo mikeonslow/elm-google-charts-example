@@ -8,15 +8,18 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Text as Text
-import Data.WallBoard as WallBoard
+import Data.Chart as Chart
+import Data.Dashboard as Dashboard
+import Data.Widget as Widget
 import Date
 import FontAwesome.Web as Icon
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Http
 import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
-import Rest.Api as Api
+import Rest.Api as Api exposing (endpoint)
 import Time
 
 
@@ -37,18 +40,26 @@ initialState =
 
         model =
             { navbarState = navbarState
-            , wallBoard = WallBoard.initialModel
+            , dashboards = []
+            , widgets = []
+            , charts = []
             , chartData = charts
             , currentTick = 0
             }
     in
     ( model
-    , Cmd.batch [ navbarCmd ]
+    , Cmd.batch [ navbarCmd, getDashboards, getWidgets ]
     )
 
 
 type alias Model =
-    { navbarState : Navbar.State, wallBoard : WallBoard.Data, chartData : List Chart, currentTick : Float }
+    { navbarState : Navbar.State
+    , dashboards : List Dashboard.Data
+    , widgets : List Widget.Data
+    , charts : List Chart.Data
+    , chartData : List Chart
+    , currentTick : Float
+    }
 
 
 type alias Chart =
@@ -62,6 +73,9 @@ type alias Chart =
 type Msg
     = NavbarMsg Navbar.State
     | CurrentTick Time.Time
+    | ReceiveDashboards (Result Http.Error (List Dashboard.Data))
+    | ReceiveWidgets (Result Http.Error (List Widget.Data))
+    | ReceiveCharts (Result Http.Error (List Chart.Data))
     | None
 
 
@@ -70,6 +84,63 @@ update msg model =
     case msg of
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
+
+        ReceiveDashboards response ->
+            case response of
+                Ok response ->
+                    let
+                        updatedModel =
+                            { model | dashboards = response }
+                    in
+                    ( updatedModel, Cmd.none )
+
+                Err error ->
+                    let
+                        errorMessage =
+                            "An error occurred: " ++ toString error
+
+                        x =
+                            Debug.log "errorMessage" errorMessage
+                    in
+                    ( model, Cmd.none )
+
+        ReceiveWidgets response ->
+            case response of
+                Ok response ->
+                    let
+                        updatedModel =
+                            { model | widgets = response }
+                    in
+                    ( updatedModel, Cmd.none )
+
+                Err error ->
+                    let
+                        errorMessage =
+                            "An error occurred: " ++ toString error
+
+                        x =
+                            Debug.log "errorMessage" errorMessage
+                    in
+                    ( model, Cmd.none )
+
+        ReceiveCharts response ->
+            case response of
+                Ok response ->
+                    let
+                        updatedModel =
+                            { model | charts = response }
+                    in
+                    ( updatedModel, Cmd.none )
+
+                Err error ->
+                    let
+                        errorMessage =
+                            "An error occurred: " ++ toString error
+
+                        x =
+                            Debug.log "errorMessage" errorMessage
+                    in
+                    ( model, Cmd.none )
 
         CurrentTick time ->
             --            let
@@ -144,6 +215,20 @@ subscriptions model =
 
 
 port renderChart : String -> Cmd msg
+
+
+
+-- API
+
+
+getDashboards : Cmd Msg
+getDashboards =
+    Http.send ReceiveDashboards (Http.get endpoint.dashboards.url Dashboard.decoder)
+
+
+getWidgets : Cmd Msg
+getWidgets =
+    Http.send ReceiveWidgets (Http.get endpoint.widgets.url Widget.decoder)
 
 
 
