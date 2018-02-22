@@ -1,5 +1,6 @@
 module Data.Widget exposing (..)
 
+import Data.Chart as Chart
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 
@@ -7,7 +8,7 @@ import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 type alias Data =
     { id : Float
     , name : String
-    , chart : Int
+    , chart : Chart.Data
     }
 
 
@@ -16,4 +17,4 @@ decoder =
     decode Data
         |> required "id" Decode.float
         |> required "name" Decode.string
-        |> optional "charts" Decode.int 999
+        |> required "chart" Chart.decoder
