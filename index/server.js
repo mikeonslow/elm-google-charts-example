@@ -14,7 +14,7 @@ fs.readFile("./db.json", (err, data) => {
   if (err) throw err;
   console.log(data.toString());
   server.use(middlewares);
-  server.use(router);
+  server.use("/api", router);
   server.listen(port);
   console.log("Server started and listening at http://localhost:" + port + "/");
 });

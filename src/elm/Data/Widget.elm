@@ -18,3 +18,7 @@ decoder =
         |> required "id" Decode.float
         |> required "name" Decode.string
         |> required "chart" Chart.decoder
+
+
+endpoint =
+    { url = "/api/" }

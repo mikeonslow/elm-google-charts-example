@@ -52,11 +52,9 @@ var MakeData = function() {
   }
 
   return {
-    api: {
-      dashboards: dashboards,
-      widgets: widgets,
-      charts: charts
-    }
+    dashboards: dashboards,
+    widgets: widgets,
+    charts: charts
   };
 };
 
