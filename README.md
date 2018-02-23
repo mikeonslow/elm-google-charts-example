@@ -1,5 +1,8 @@
-# elm-google-charts-example
-Elm + Google Charts Example
+# Elm + Google Charts Example
 
-### To start
+### Proof of concept for using Elm and Google Charts together
+
+![Example Image](/example.png)
+
+#### To start
 `npm install && npm start`
