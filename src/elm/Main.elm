@@ -56,10 +56,6 @@ type alias Model =
     }
 
 
-type alias Chart =
-    { id : String, data : List Int }
-
-
 
 -- UPDATE
 
@@ -69,7 +65,7 @@ type Msg
     | CurrentTick Time.Time
     | ReceiveDashboards (Result Http.Error (List Dashboard.Data))
     | ReceiveWidgets (Result Http.Error (List Widget.Data))
-    | ReceiveCharts (Result Http.Error (List Chart.Data))
+    | ReceiveChart (Result Http.Error (List Chart.Data))
     | None
 
 
@@ -94,7 +90,7 @@ update msg model =
         ReceiveWidgets response ->
             let
                 successHandler m d =
-                    ( { m | widgets = d }, Cmd.batch <| buildChartCmds d )
+                    ( { m | widgets = d }, Cmd.batch <| (d |> List.map (\d -> getChart <| toString d.id)) )
 
                 ( updatedModel, cmds ) =
                     response
@@ -103,7 +99,7 @@ update msg model =
             in
             ( updatedModel, cmds )
 
-        ReceiveCharts response ->
+        ReceiveChart response ->
             ( model, Cmd.none )
 
         CurrentTick time ->
@@ -188,6 +184,15 @@ getDashboards =
 getWidgets : Cmd Msg
 getWidgets =
     Http.send ReceiveWidgets (Http.get endpoint.widgets.url Widget.decoder)
+
+
+getChart : String -> Cmd Msg
+getChart id =
+    let
+        url =
+            String.join "/" [ endpoint.charts.url, id ]
+    in
+    Http.send ReceiveChart (Http.get url Chart.decoder)
 
 
 

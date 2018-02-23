@@ -18,11 +18,13 @@ type alias Point =
     ( String, Float )
 
 
-decoder : Decoder Data
+decoder : Decoder (List Data)
 decoder =
-    decode Data
-        |> required "id" Decode.float
-        |> required "points" (Decode.list <| Decode.list <| tuple2Decoder Decode.string Decode.float)
+    Decode.list
+        (decode Data
+            |> required "id" Decode.float
+            |> required "points" (Decode.list <| Decode.list <| tuple2Decoder Decode.string Decode.float)
+        )
 
 
 tuple2Decoder : Decoder a -> Decoder b -> Decoder ( a, b )
