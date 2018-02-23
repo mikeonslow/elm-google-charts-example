@@ -19,6 +19,7 @@ import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
+import Json.Encode as Encode
 import Rest.Api as Api exposing (endpoint)
 import Time
 import View.Widget
@@ -33,8 +34,6 @@ initialState =
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
 
-        --        chartCmds =
-        --            charts |> List.reverse |> List.map (\c -> renderChart c.id)
         model =
             { navbarState = navbarState
             , dashboards = []
@@ -44,7 +43,7 @@ initialState =
             }
     in
     ( model
-    , Cmd.batch [ navbarCmd, getDashboards, getWidgets ]
+    , Cmd.batch [ navbarCmd, getDashboards ]
     )
 
 
@@ -81,61 +80,31 @@ update msg model =
             ( { model | navbarState = state }, Cmd.none )
 
         ReceiveDashboards response ->
-            case response of
-                Ok response ->
-                    let
-                        updatedModel =
-                            { model | dashboards = response }
-                    in
-                    ( updatedModel, Cmd.none )
+            let
+                successHandler m d =
+                    ( { m | dashboards = d }, getWidgets )
 
-                Err error ->
-                    let
-                        errorMessage =
-                            "An error occurred: " ++ toString error
-
-                        x =
-                            Debug.log "errorMessage" errorMessage
-                    in
-                    ( model, Cmd.none )
+                ( updatedModel, cmds ) =
+                    response
+                        |> handleResponse model successHandler
+                        |> Result.withDefault ( model, Cmd.none )
+            in
+            ( updatedModel, cmds )
 
         ReceiveWidgets response ->
-            case response of
-                Ok response ->
-                    let
-                        updatedModel =
-                            { model | widgets = response }
-                    in
-                    ( updatedModel, Cmd.none )
+            let
+                successHandler m d =
+                    ( { m | widgets = d }, Cmd.batch <| buildChartCmds d )
 
-                Err error ->
-                    let
-                        errorMessage =
-                            "An error occurred: " ++ toString error
-
-                        x =
-                            Debug.log "errorMessage" errorMessage
-                    in
-                    ( model, Cmd.none )
+                ( updatedModel, cmds ) =
+                    response
+                        |> handleResponse model successHandler
+                        |> Result.withDefault ( model, Cmd.none )
+            in
+            ( updatedModel, cmds )
 
         ReceiveCharts response ->
-            case response of
-                Ok response ->
-                    let
-                        updatedModel =
-                            { model | charts = response }
-                    in
-                    ( updatedModel, Cmd.none )
-
-                Err error ->
-                    let
-                        errorMessage =
-                            "An error occurred: " ++ toString error
-
-                        x =
-                            Debug.log "errorMessage" errorMessage
-                    in
-                    ( model, Cmd.none )
+            ( model, Cmd.none )
 
         CurrentTick time ->
             --            let
@@ -146,6 +115,23 @@ update msg model =
 
         None ->
             ( model, Cmd.none )
+
+
+handleResponse model successHandler response =
+    case response of
+        Ok data ->
+            Ok (successHandler model data)
+
+        Err error ->
+            Err error
+
+
+
+--( model, Cmd.none )
+
+
+buildChartCmds widgets =
+    widgets |> List.map (\w -> receiveChartData "w")
 
 
 
@@ -187,7 +173,7 @@ subscriptions model =
 -- PORTS
 
 
-port renderChart : String -> Cmd msg
+port receiveChartData : String -> Cmd msg
 
 
 

@@ -55,9 +55,9 @@ const R = require("ramda");
 
     var app = Elm.Main.embed(mountNode);
 
-    app.ports.renderChart.subscribe(function(id) {
-      console.log("renderChart " + id);
-      drawChart(id);
+    app.ports.receiveChartData.subscribe(function(data) {
+      console.log("receiveChartData " + data);
+      // drawChart();
     });
   };
 
