@@ -22,19 +22,23 @@ const R = require("ramda");
       return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
 
-    function drawChart(id) {
+    function drawChart(elmData) {
       // TODO move all of this logic into it's own module once PoC is completed
+
+      const id = `widget${elmData.id}`;
       const options = {
         legend: "right",
         tooltip: { trigger: "selection" }
       };
+
       var chartElemInterval = setInterval(function() {
         if (chartsLoaded === true && document.getElementById(id) !== null) {
           clearInterval(chartElemInterval);
           var data = new google.visualization.DataTable();
-          data.addColumn("string", "Topping");
-          data.addColumn("number", "Slices");
-          data.addRows(generateFakeChartData(getRandomInt(4, 9)));
+          data.addColumn("string", "Salesperson");
+          data.addColumn("number", "Whatchamahozits Sold");
+          data.addRows(elmData.points);
+
           var chart = new google.visualization.PieChart(
             document.getElementById(id)
           );
@@ -55,9 +59,9 @@ const R = require("ramda");
 
     var app = Elm.Main.embed(mountNode);
 
-    app.ports.receiveChartData.subscribe(function(data) {
-      console.log("receiveChartData " + data);
-      // drawChart();
+    app.ports.sendChartData.subscribe(function(data) {
+      console.log("receiveChartData ", data);
+      drawChart(data);
     });
   };
 

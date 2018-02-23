@@ -7,7 +7,7 @@ import Util exposing ((=>))
 
 
 type alias Data =
-    { id : Float, points : List (List Point) }
+    { id : Float, points : List Point }
 
 
 type alias Points =
@@ -18,13 +18,11 @@ type alias Point =
     ( String, Float )
 
 
-decoder : Decoder (List Data)
+decoder : Decoder Data
 decoder =
-    Decode.list
-        (decode Data
-            |> required "id" Decode.float
-            |> required "points" (Decode.list <| Decode.list <| tuple2Decoder Decode.string Decode.float)
-        )
+    decode Data
+        |> required "id" Decode.float
+        |> required "points" (Decode.list <| tuple2Decoder Decode.string Decode.float)
 
 
 tuple2Decoder : Decoder a -> Decoder b -> Decoder ( a, b )
@@ -53,7 +51,7 @@ encodePoints points =
 
 
 encodePoint =
-    tuple2Encoder Encode.string Encode.int
+    tuple2Encoder Encode.string Encode.float
 
 
 tuple2Encoder : (a -> Value) -> (b -> Value) -> ( a, b ) -> Value

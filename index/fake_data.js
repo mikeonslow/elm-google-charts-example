@@ -6,8 +6,8 @@ const R = require("ramda");
 var MakeData = function() {
   var widgetCount = 1; // TODO Refactor to more functional style with something like http://ramdajs.com/docs/#addIndex, ran out of time :[
 
-  const dashboardMax = 10;
-  const widgetsPerDashboard = 10;
+  const dashboardMax = 1;
+  const widgetsPerDashboard = 9;
 
   const dashboards = generateDashboards(dashboardMax);
 
@@ -42,7 +42,7 @@ var MakeData = function() {
   }
 
   function generateChart(widgetId) {
-    return { id: widgetId, data: generateFakeChartData(8) };
+    return { id: widgetId, points: generateFakeChartData(8) };
   }
 
   function generateFakeChartData(max) {

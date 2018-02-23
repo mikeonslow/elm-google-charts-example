@@ -65,7 +65,7 @@ type Msg
     | CurrentTick Time.Time
     | ReceiveDashboards (Result Http.Error (List Dashboard.Data))
     | ReceiveWidgets (Result Http.Error (List Widget.Data))
-    | ReceiveChart (Result Http.Error (List Chart.Data))
+    | ReceiveChart (Result Http.Error Chart.Data)
     | None
 
 
@@ -90,7 +90,7 @@ update msg model =
         ReceiveWidgets response ->
             let
                 successHandler m d =
-                    ( { m | widgets = d }, Cmd.batch <| (d |> List.map (\d -> getChart <| toString d.id)) )
+                    ( { m | widgets = d }, Cmd.batch <| (d |> List.reverse |> List.map (\d -> getChart <| toString d.id)) )
 
                 ( updatedModel, cmds ) =
                     response
@@ -100,7 +100,18 @@ update msg model =
             ( updatedModel, cmds )
 
         ReceiveChart response ->
-            ( model, Cmd.none )
+            let
+                successHandler m d =
+                    ( { m | charts = d :: m.charts }
+                    , sendChartData <| Chart.encoder d
+                    )
+
+                ( updatedModel, cmds ) =
+                    response
+                        |> handleResponse model successHandler
+                        |> Result.withDefault ( model, Cmd.none )
+            in
+            ( updatedModel, cmds )
 
         CurrentTick time ->
             --            let
@@ -120,14 +131,6 @@ handleResponse model successHandler response =
 
         Err error ->
             Err error
-
-
-
---( model, Cmd.none )
-
-
-buildChartCmds widgets =
-    widgets |> List.map (\w -> receiveChartData "w")
 
 
 
@@ -169,7 +172,7 @@ subscriptions model =
 -- PORTS
 
 
-port receiveChartData : String -> Cmd msg
+port sendChartData : Encode.Value -> Cmd msg
 
 
 
