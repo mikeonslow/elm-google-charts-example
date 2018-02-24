@@ -33,7 +33,11 @@ const R = require("ramda");
 
       var chartElemInterval = setInterval(function() {
         if (chartsLoaded === true && document.getElementById(id) !== null) {
+          // do once interval condition is true
           clearInterval(chartElemInterval);
+
+          // business logic stuff
+
           var data = new google.visualization.DataTable();
           data.addColumn("string", "Salesperson");
           data.addColumn("number", "Whatchamahozits Sold");
@@ -45,6 +49,7 @@ const R = require("ramda");
           chart.draw(data, options);
           console.log("chart (" + id + ") loaded...");
         }
+        // do every 20ms until interval is cleared
       }, 20);
     }
 
