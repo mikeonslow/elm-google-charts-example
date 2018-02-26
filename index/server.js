@@ -12,7 +12,6 @@ const router = jsonServer.router("./db.json");
 
 fs.readFile("./db.json", (err, data) => {
   if (err) throw err;
-  console.log(data.toString());
   server.use(middlewares);
   server.use("/api", router);
   server.listen(port);

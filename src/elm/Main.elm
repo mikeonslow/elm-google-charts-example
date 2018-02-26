@@ -1,6 +1,5 @@
 port module Main exposing (..)
 
-import AnimationFrame
 import Bootstrap.Button as Button
 import Bootstrap.Card as Card
 import Bootstrap.Grid as Grid
@@ -21,7 +20,6 @@ import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 import Json.Encode as Encode
 import Rest.Api as Api exposing (endpoint)
-import Time
 import View.Widget
 
 
@@ -39,7 +37,6 @@ initialState =
             , dashboards = []
             , widgets = []
             , charts = []
-            , currentTick = 0
             }
     in
     ( model
@@ -52,7 +49,6 @@ type alias Model =
     , dashboards : List Dashboard.Data
     , widgets : List Widget.Data
     , charts : List Chart.Data
-    , currentTick : Float
     }
 
 
@@ -62,7 +58,6 @@ type alias Model =
 
 type Msg
     = NavbarMsg Navbar.State
-    | CurrentTick Time.Time
     | ReceiveDashboards (Result Http.Error (List Dashboard.Data))
     | ReceiveWidgets (Result Http.Error (List Widget.Data))
     | ReceiveChart (Result Http.Error Chart.Data)
@@ -112,13 +107,6 @@ update msg model =
                         |> Result.withDefault ( model, Cmd.none )
             in
             ( updatedModel, cmds )
-
-        CurrentTick time ->
-            --            let
-            ----                x =
-            ----                    Debug.log "CurrentTick" <| Date.fromTime time
-            --            in
-            { model | currentTick = time } ! []
 
         None ->
             ( model, Cmd.none )
