@@ -38,8 +38,8 @@ module.exports = {
         use: {
           loader: "elm-webpack-loader",
           options: {
-            // verbose: true,
-            // warn: true,
+            verbose: true,
+            warn: true,
             debug: true
           }
         }

@@ -1,23 +1,13 @@
 port module Main exposing (..)
 
-import Bootstrap.Button as Button
-import Bootstrap.Card as Card
 import Bootstrap.Grid as Grid
-import Bootstrap.Grid.Col as Col
-import Bootstrap.Grid.Row as Row
 import Bootstrap.Navbar as Navbar
-import Bootstrap.Text as Text
 import Data.Chart as Chart
 import Data.Dashboard as Dashboard
 import Data.Widget as Widget
-import Date
-import FontAwesome.Web as Icon
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
 import Http
-import Json.Decode as Decode exposing (Decoder, Value)
-import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 import Json.Encode as Encode
 import Rest.Api as Api exposing (endpoint)
 import View.Widget
@@ -85,7 +75,13 @@ update msg model =
         ReceiveWidgets response ->
             let
                 successHandler m d =
-                    ( { m | widgets = d }, Cmd.batch <| (d |> List.reverse |> List.map (\d -> getChart <| toString d.id)) )
+                    ( { m | widgets = d }
+                    , Cmd.batch <|
+                        (d
+                            |> List.reverse
+                            |> List.map (\d -> getChart <| toString d.id)
+                        )
+                    )
 
                 ( updatedModel, cmds ) =
                     response
@@ -112,6 +108,7 @@ update msg model =
             ( model, Cmd.none )
 
 
+handleResponse : a -> (a -> b -> value) -> Result c b -> Result c value
 handleResponse model successHandler response =
     case response of
         Ok data ->
@@ -137,6 +134,7 @@ view model =
         ]
 
 
+viewNavbar : Model -> Html Msg
 viewNavbar model =
     Navbar.config NavbarMsg
         |> Navbar.withAnimation

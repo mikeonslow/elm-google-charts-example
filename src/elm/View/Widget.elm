@@ -6,10 +6,12 @@ import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
 import Bootstrap.Text as Text
-import Html exposing (br, div, i, text)
+import Data.Widget as Widget
+import Html exposing (..)
 import Html.Attributes exposing (class, id)
 
 
+render : Widget.Data -> Grid.Column msg
 render options =
     let
         idAsString =
@@ -22,22 +24,12 @@ render options =
         [ Card.config [ Card.outlinePrimary, Card.align Text.alignXsCenter ]
             |> Card.header [] [ text options.label ]
             |> Card.block []
-                [ Card.text [ id widgetId ] [ viewChart options ]
-
-                --                , Card.text [] [ viewButtonRefresh options ]
-                ]
+                [ Card.text [ id widgetId ] [ viewChart ] ]
             |> Card.view
         , br [] []
         ]
 
 
-viewChart options =
+viewChart : Html msg
+viewChart =
     div [ class "chart-placeholder text-primary" ] [ i [ class "fas fa-spinner fa-spin fa-3x" ] [] ]
-
-
-viewButtonRefresh options =
-    Button.button
-        [ Button.primary
-        , Button.attrs [ class "text-right" ]
-        ]
-        [ text "Reload ", i [ class "fas fa-sync-alt fa-1x" ] [] ]
