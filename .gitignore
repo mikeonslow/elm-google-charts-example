@@ -5,3 +5,4 @@ repl-temp-*
 .idea
 dist
 node_modules
+db.json
