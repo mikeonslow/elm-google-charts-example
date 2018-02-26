@@ -11,4 +11,4 @@
 Uses `faker`to generate mock data and `json-server` to serve it as a JSON API
 
 #### Front-end
-Uses Elm (`http://elm-lang.org/`) for all API calls, draws dashboard and widget UI based on API responses, and then simply passes the data needed for rendering each Google Chart to the JavaScript code over a port. 
+Uses the Elm programming language [http://elm-lang.org/](http://elm-lang.org/) for all API calls, draws dashboard and widget UI based on API responses, and then simply passes the data needed for rendering each Google Chart to the JavaScript code over a port. 
