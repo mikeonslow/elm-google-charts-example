@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && elm package install --yes && elm-live src/elm/Main.elm --output=dist/js/app.js --dir=dist --pushstate --open --debug",
+    "start": "npm run dev",
     "dev": "node index/server.js | webpack-dev-server --config ./config/webpack.config.js",
     "publish": "npm run cleanDist && npm run setupDist && webpack --config ./config/webpack.config.js",
     "cleanDist": "rm -rf dist",
-    "setupDist": "mkdir -p dist && cp -R src/index.html dist"
+    "setupDist": "mkdir dist && cp -R index/index.html dist"
   },
   "repository": {
     "type": "git",
